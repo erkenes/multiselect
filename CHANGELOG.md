@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/erkenes/multiselect/compare/0.2.0...0.2.1) (2024-10-15)
+
+
+### Bug Fixes
+
+* node version in workflows ([353c446](https://github.com/erkenes/multiselect/commit/353c4465e3ce8411e86b54eb8f92c2f17976397d))
+
 ## [0.2.0](https://github.com/erkenes/multiselect/compare/v0.1.0...0.2.0) (2024-10-15)
 
 
