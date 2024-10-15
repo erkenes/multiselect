@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/erkenes/multiselect/compare/0.2.1...0.2.2) (2024-10-15)
+
+
+### Bug Fixes
+
+* publish public package ([d363460](https://github.com/erkenes/multiselect/commit/d3634605b383a811fbfee42a2201b4ab00014ece))
+
 ## [0.2.1](https://github.com/erkenes/multiselect/compare/0.2.0...0.2.1) (2024-10-15)
 
 
