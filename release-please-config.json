@@ -1,0 +1,21 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "include-v-in-tag": false,
+      "draft": false,
+      "prerelease": true,
+      "bumpMinorPreMajor": false,
+      "bumpPatchForMinorPreMajor": false,
+      "changelogPath": "CHANGELOG.md",
+      "versioning": "default",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "package.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,71 @@
+// General
+$multiselect-border-radius: 5px !default;
+$multiselect-color: #212529 !default;
+$multiselect-font-size: 16px !default;
+
+// Header
+$multiselect-header-border-color: #dee2e6 !default;
+$multiselect-header-border: 1px solid $multiselect-header-border-color !default;
+$multiselect-header-padding: 7px 30px 7px 12px !default;
+$multiselect-header-gap: 5px !default;
+$multiselect-header-min-height: 45px !default;
+$multiselect-header-active-border-color: darken($multiselect-header-border-color, 10) !default;
+$multiselect-placeholder-color: lighten(#212529, 30) !default;
+$multiselect-placeholder-font-size: $multiselect-font-size !default;
+
+// Header: Max-Option
+$multiselect-header-max-font-size: 14px !default;
+$multiselect-header-max-color: lighten(#212529, 30) !default;
+
+// Header: Selected Options
+$multiselect-options-background-color: #fff !default;
+$multiselect-options-border-radius: 5px !default;
+$multiselect-options-box-shadow: 0 0 10px rgba(0, 0, 0, .1) !default;
+$multiselect-options-max-height: 200px !default;
+$multiselect-options-margin-top: 5px !default;
+$multiselect-options-padding: 5px !default;
+
+// Header: Selected Option-Item
+$multiselect-header-option-background-color: #fff !default;
+$multiselect-header-option-font-size: 14px !default;
+$multiselect-header-option-padding: 3px 8px !default;
+$multiselect-header-option-border-radius: 5px !default;
+$multiselect-options-scrollbar-width: 5px !default;
+$multiselect-options-scrollbar-track-color: #f0f1f3 !default;
+$multiselect-options-scrollbar-thumb-color: #cdcfd1 !default;
+$multiselect-options-scrollbar-thumb-hover-color: darken(#cdcfd1, 10) !default;
+
+
+// Option-List: Select-All
+$multiselect-options-select-all-padding: 4px 12px !default;
+$multiselect-options-select-all-height: 42px !default;
+$multiselect-options-select-all-border-color: #f1f3f5 !default;
+$multiselect-options-select-all-border-bottom: 1px solid $multiselect-options-select-all-border-color !default;
+
+// Option-List: Search
+$multiselect-search-padding: 7px 10px !default;
+$multiselect-search-border-color: #dee2e6 !default;
+$multiselect-search-border: 1px solid $multiselect-search-border-color !default;
+$multiselect-search-border-radius: 5px !default;
+$multiselect-search-margin: 10px 10px 5px 10px !default;
+$multiselect-search-font-size: 16px !default;
+$multiselect-search-placeholder-color: #b2b5b9 !default;
+
+// Option-List-Item: Checkbox
+$multiselect-option-radio-width: 16px !default;
+$multiselect-option-radio-height: $multiselect-option-radio-width !default;
+$multiselect-option-radio-border-color: #ced4da !default;
+$multiselect-option-radio-border: 1px solid $multiselect-option-radio-border-color !default;
+$multiselect-option-radio-border-radius: 4px !default;
+$multiselect-option-radio-margin-right: 14px !default;
+
+// Option-List-Item: Text
+$multiselect-option-text-font-size: 16px !default;
+$multiselect-option-text-line-height: 20px !default;
+$multiselect-option-background-color-hover: #f3f4f7 !default;
+
+// Option-List-Item: Selected
+$multiselect-selected-border-color: #fff !default;
+$multiselect-selected-background-color: #fff !default;
+$multiselect-selected-color: #000 !default;
+$multiselect-selected-icon: '' !default;

@@ -1,0 +1,4 @@
+.npm-pack-all-tmp
+.idea
+.git
+*.tgz
