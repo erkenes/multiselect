@@ -19,17 +19,23 @@ export class MultiSelect {
      * @param element {string|HTMLSelectElement}
      * @param options
      */
-    constructor(element, options = {}) {
-        this.selectElement = typeof element === 'string' ? document.querySelector(element) : element;
+    constructor(element: string|HTMLSelectElement|HTMLElement, options = {}) {
+        let select = element;
 
-        if (!this.selectElement instanceof HTMLSelectElement) {
-            console.error('Element must be a select element but is of type ' + typeof this.selectElement, this.selectElement);
-            throw new Error('Element must be a select element but is of type ' + typeof this.selectElement);
+        if (typeof element === 'string') {
+            select = document.querySelector(element) as HTMLElement;
         }
+
+        if (!(select instanceof HTMLSelectElement)) {
+            console.error('Element must be a select element but is of type ' + typeof select, select);
+            throw new Error('Element must be a select element but is of type ' + typeof select);
+        }
+
+        this.selectElement = select as HTMLSelectElement;
 
         let defaults = {
             placeholder: 'Select item(s)',
-            max: element.multiple ? null : 1,
+            max: this.selectElement.multiple ? null : 1,
             min: null,
             placeholderType: 'default',
             showMaxHint: false,
@@ -57,11 +63,11 @@ export class MultiSelect {
         this.options = Object.assign(defaults, options);
         for (const prop in this.selectElement.dataset) {
             let dataProp = prop.replace('ms', '');
-            dataProp = dataProp[0].toLowerCase() + dataProp.slice(1);
+            dataProp = dataProp[0].toLowerCase() + dataProp.slice(1) as string;
 
-            if (this.options[dataProp] !== undefined) {
+            if ((<string>this.options[dataProp]) ?? false) {
                 if (dataProp === 'min' || dataProp === 'max') {
-                    this.options[dataProp] = parseInt(this.selectElement.dataset[prop]);
+                    this.options[dataProp] = parseInt(<string>this.selectElement.dataset[prop]);
                 } else {
                     this.options[dataProp] = this.selectElement.dataset[prop];
                 }
@@ -79,9 +85,9 @@ export class MultiSelect {
             Array.from(options).forEach((option) => {
                 this.options.data.push({
                     value: option.value,
-                    text: option.innerHTML,
-                    selected: option.selected,
-                    html: option.dataset.msHtml,
+                    text: option.innerHTML ?? option.value,
+                    selected: option.selected ?? false,
+                    html: option.dataset.msHtml ?? null,
                     isDefaultValue: false
                 });
             });
@@ -98,7 +104,7 @@ export class MultiSelect {
         this.dropdown = this._template();
 
         // hide the original select element
-        this.selectElement.parentNode.insertBefore(this.dropdown, this.selectElement);
+        this.selectElement?.parentNode?.insertBefore(this.dropdown, this.selectElement);
         this.dropdown.appendChild(this.selectElement);
         this.selectElement.style.display = 'none';
 
@@ -111,7 +117,11 @@ export class MultiSelect {
      *
      * @param value
      */
-    public isSelectedValue(value) {
+    public isSelectedValue(value: string|undefined): boolean {
+        if (!value) {
+            return false;
+        }
+
         const option = this.options.data.find((data) => data.value == value);
         if (option) {
             return option.selected;
@@ -123,18 +133,22 @@ export class MultiSelect {
     /**
      * Count the selected options
      */
-    public countSelectedOptions() {
+    public countSelectedOptions(): number {
         return this.options.data.filter((option) => option.selected).length;
     }
 
     /**
      * Check if the max selection is reached
      */
-    public maxSelectionReached() {
+    public maxSelectionReached(): boolean {
         return this.options.max && this.countSelectedOptions() >= this.options.max;
     }
 
-    protected _getTranslation(key) {
+    protected _getTranslation(key: string): string {
+        if (!this.options.translations.hasOwnProperty(key)) {
+            return key;
+        }
+
         return this.options.translations[key];
     }
 
@@ -232,11 +246,15 @@ export class MultiSelect {
      */
     protected _eventHandlers() {
         const headerElement = this.dropdown.querySelector('.multi-select-header');
+        if (!headerElement) {
+            return;
+        }
+
         headerElement.addEventListener('click', () => {
             this.toggle();
         });
 
-        this.dropdown.querySelectorAll('.multi-select-option').forEach((option: HTMLElement) => {
+        (this.dropdown.querySelectorAll('.multi-select-option') as NodeListOf<HTMLElement>).forEach((option) => {
             option.addEventListener('click', () => {
                 let selected = true;
 
@@ -251,18 +269,18 @@ export class MultiSelect {
                     (this.dropdown.querySelector('.multi-select-search') as HTMLInputElement).value = '';
                 }
 
-                this.dropdown.querySelectorAll('.multi-select-option').forEach((option: HTMLElement) => option.style.display = 'flex');
+                (this.dropdown.querySelectorAll('.multi-select-option') as NodeListOf<HTMLElement>).forEach((option) => option.style.display = 'flex');
 
                 if (this.options.closeListOnItemSelect === true) {
                     this.close();
                 }
 
-                this.options.onChange(option.dataset.value, option.querySelector('.multi-select-option-text').innerHTML, option);
+                this.options.onChange(option.dataset.value, option.querySelector('.multi-select-option-text')?.innerHTML, option);
 
                 if (selected) {
-                    this.options.onSelect(option.dataset.value, option.querySelector('.multi-select-option-text').innerHTML, option);
+                    this.options.onSelect(option.dataset.value, option.querySelector('.multi-select-option-text')?.innerHTML, option);
                 } else {
-                    this.options.onUnselect(option.dataset.value, option.querySelector('.multi-select-option-text').innerHTML, option);
+                    this.options.onUnselect(option.dataset.value, option.querySelector('.multi-select-option-text')?.innerHTML, option);
                 }
             }, {passive: true});
         });
@@ -270,15 +288,17 @@ export class MultiSelect {
         if (this.options.search) {
             let search = this.dropdown.querySelector('.multi-select-search') as HTMLInputElement;
             search.addEventListener('input', () => {
-                this.dropdown.querySelectorAll('.multi-select-option').forEach((option: HTMLElement) => {
-                    option.style.display = option.querySelector('.multi-select-option-text').innerHTML.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ? 'flex' : 'none';
+                (this.dropdown.querySelectorAll('.multi-select-option') as NodeListOf<HTMLElement>).forEach((option) => {
+                    if (option) {
+                        option.style.display = option.querySelector('.multi-select-option-text')?.innerHTML.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ? 'flex' : 'none';
+                    }
                 });
             });
         }
 
         if (this.options.selectAll) {
             let selectAllButton = this.dropdown.querySelector('.multi-select-all');
-            selectAllButton.addEventListener('click', () => {
+            selectAllButton?.addEventListener('click', () => {
                 let allSelected = selectAllButton.classList.contains('multi-select-selected');
 
                 if (allSelected) {
@@ -290,7 +310,7 @@ export class MultiSelect {
         }
 
         if (this.selectElement.id && document.querySelector('label[for="' + this.selectElement.id + '"]')) {
-            document.querySelector('label[for="' + this.selectElement.id + '"]').addEventListener('click', () => {
+            document.querySelector('label[for="' + this.selectElement.id + '"]')?.addEventListener('click', () => {
                 this.toggle();
             });
         }
@@ -318,21 +338,21 @@ export class MultiSelect {
      * Open the dropdown
      */
     public open() {
-        this.dropdown.querySelector('.multi-select-header').classList.add('multi-select-header-active');
+        this.dropdown.querySelector('.multi-select-header')?.classList.add('multi-select-header-active');
     }
 
     /**
      * Close the dropdown
      */
     public close() {
-        this.dropdown.querySelector('.multi-select-header').classList.remove('multi-select-header-active');
+        this.dropdown.querySelector('.multi-select-header')?.classList.remove('multi-select-header-active');
     }
 
     /**
      * Toggle the dropdown
      */
     public toggle() {
-        this.dropdown.querySelector('.multi-select-header').classList.toggle('multi-select-header-active');
+        this.dropdown.querySelector('.multi-select-header')?.classList.toggle('multi-select-header-active');
     }
 
     /**
@@ -341,7 +361,11 @@ export class MultiSelect {
      * @param value
      * @param preventUpdate
      */
-    public selectOption(value, preventUpdate: boolean = false) {
+    public selectOption(value: string|undefined, preventUpdate: boolean = false) {
+        if (!value) {
+            return;
+        }
+
         this.options.data.filter((data) => data.value == value).map((option) => {
 
             // skip if max is reached
@@ -373,7 +397,11 @@ export class MultiSelect {
      * @param value
      * @param preventUpdate
      */
-    public unselectOption(value, preventUpdate: boolean = false) {
+    public unselectOption(value: string|undefined, preventUpdate: boolean = false) {
+        if (!value) {
+            return;
+        }
+
         this.options.data.filter((data) => data.value == value).map((option) => {
             // do not deselect if min is reached
             if (this.options?.min && this.countSelectedOptions() === this.options.min) {
@@ -394,7 +422,7 @@ export class MultiSelect {
     /**
      * select all options
      */
-    public selectAll() {
+    public selectAll(): void {
         this.options.data.forEach((data) => {
             this.selectOption(data.value, true);
         });
@@ -405,7 +433,7 @@ export class MultiSelect {
     /**
      * deselect all options
      */
-    public unselectAll() {
+    public unselectAll(): void {
         this.options.data.forEach((data) => {
             this.unselectOption(data.value, true)
         });
@@ -416,7 +444,7 @@ export class MultiSelect {
     /**
      * update the dropdown and the select element
      */
-    public update() {
+    public update(): void {
         this.options.data.forEach((data) => {
             Array.from(this.selectElement.options).filter((option) => option.value == data.value).map((option) => {
                 option.selected = data.selected;
@@ -436,10 +464,12 @@ export class MultiSelect {
         if (this.options.selectAll) {
             let selectAllButton = this.dropdown.querySelector('.multi-select-all');
 
-            if (Array.from(this.options.data).filter((data) => data.selected).length === this.options.data.length) {
-                selectAllButton.classList.add('multi-select-selected');
-            } else {
-                selectAllButton.classList.remove('multi-select-selected');
+            if (selectAllButton) {
+                if (Array.from(this.options.data).filter((data) => data.selected).length === this.options.data.length) {
+                    selectAllButton.classList.add('multi-select-selected');
+                } else {
+                    selectAllButton.classList.remove('multi-select-selected');
+                }
             }
         }
 
@@ -449,32 +479,33 @@ export class MultiSelect {
     /**
      * Update the placeholder in the header
      */
-    protected updatePlaceholder() {
+    protected updatePlaceholder(): void {
         const headerElement = this.dropdown.querySelector('.multi-select-header');
 
         this.dropdown.querySelector('.multi-select-header-placeholder')?.remove();
 
         if (this.options.showMaxHint && this.options.max) {
-            this.dropdown.querySelector('.multi-select-header-max').innerHTML = this.countSelectedOptions() + '/' + this.options.max;
+            const headerMax = this.dropdown.querySelector('.multi-select-header-max');
+            if (headerMax) {
+                headerMax.innerHTML = this.countSelectedOptions() + '/' + this.options?.max;
+            }
         }
 
         if (this.countSelectedOptions() === 0) {
             this.dropdown.querySelectorAll('.multi-select-header-option').forEach((option) => option.remove());
-            headerElement.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-placeholder">${this.options.placeholder}</span>`);
+            headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-placeholder">${this.options.placeholder}</span>`);
 
             return;
         }
 
         switch (this.options.placeholderType) {
             case 'count':
-                if (this.dropdown.querySelector('.multi-select-header-option')) {
-                    this.dropdown.querySelector('.multi-select-header-option').remove();
-                }
+                this.dropdown.querySelector('.multi-select-header-option')?.remove();
 
                 let label = this._getTranslation('selected');
                 label = label.replace('%i', this.countSelectedOptions().toString());
 
-                headerElement.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${label}</span>`);
+                headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${label}</span>`);
                 break;
             default:
                 this.options.data.forEach((data) => {
@@ -487,7 +518,7 @@ export class MultiSelect {
                             return;
                         }
 
-                        const label = this.dropdown.querySelector(`.multi-select-option[data-value="${data.value}"] .multi-select-option-text`).innerHTML;
+                        const label = this.dropdown.querySelector(`.multi-select-option[data-value="${data.value}"] .multi-select-option-text`)?.innerHTML;
 
                         const opt = document.createElement('div');
                         opt.classList.add('multi-select-header-option');
@@ -498,7 +529,7 @@ export class MultiSelect {
                         if (maxHint) {
                             maxHint.insertAdjacentElement('beforebegin', opt);
                         } else {
-                            headerElement.appendChild(opt);
+                            headerElement?.appendChild(opt);
                         }
                     }
                 });
@@ -509,7 +540,7 @@ export class MultiSelect {
     /**
      * Reset the selection to the default values
      */
-    public reset() {
+    public reset(): void {
         this.options.data.map((data) => {
             data.selected = data.isDefaultValue;
         });
@@ -517,7 +548,3 @@ export class MultiSelect {
         this.update();
     }
 }
-
-document.querySelectorAll('.multiselect').forEach((select) => {
-    new MultiSelect(select);
-});

@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // General
 $multiselect-border-radius: 5px !default;
 $multiselect-color: #212529 !default;
@@ -9,13 +11,13 @@ $multiselect-header-border: 1px solid $multiselect-header-border-color !default;
 $multiselect-header-padding: 7px 30px 7px 12px !default;
 $multiselect-header-gap: 5px !default;
 $multiselect-header-min-height: 45px !default;
-$multiselect-header-active-border-color: darken($multiselect-header-border-color, 10) !default;
-$multiselect-placeholder-color: lighten(#212529, 30) !default;
+$multiselect-header-active-border-color: color.adjust($multiselect-header-border-color, $lightness: -10%) !default;
+$multiselect-placeholder-color: color.adjust(#212529, $lightness: 30%) !default;
 $multiselect-placeholder-font-size: $multiselect-font-size !default;
 
 // Header: Max-Option
 $multiselect-header-max-font-size: 14px !default;
-$multiselect-header-max-color: lighten(#212529, 30) !default;
+$multiselect-header-max-color: color.adjust(#212529, $lightness: 30%) !default;
 
 // Header: Selected Options
 $multiselect-options-background-color: #fff !default;
@@ -33,7 +35,7 @@ $multiselect-header-option-border-radius: 5px !default;
 $multiselect-options-scrollbar-width: 5px !default;
 $multiselect-options-scrollbar-track-color: #f0f1f3 !default;
 $multiselect-options-scrollbar-thumb-color: #cdcfd1 !default;
-$multiselect-options-scrollbar-thumb-hover-color: darken(#cdcfd1, 10) !default;
+$multiselect-options-scrollbar-thumb-hover-color: color.adjust(#cdcfd1, $lightness: -10%) !default;
 
 
 // Option-List: Select-All
