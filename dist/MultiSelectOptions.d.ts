@@ -14,6 +14,7 @@ export interface MultiSelectOptions {
     dropdownWidth: number | string;
     dropdownHeight: number | string;
     data: Map<string, MultiSelectGroup>;
+    onInitialize: Function;
     onChange: Function;
     onSelect: Function;
     onUnselect: Function;

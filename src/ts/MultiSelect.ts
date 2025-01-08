@@ -55,6 +55,8 @@ export class MultiSelect {
                 searchPlaceholder: 'Search...',
                 selected: '%i selected',
             },
+            onInitialize: function () {
+            },
             onChange: function () {
             },
             onSelect: function () {
@@ -115,6 +117,7 @@ export class MultiSelect {
 
         this._eventHandlers();
         this.update();
+        this.options.onInitialize();
     }
 
     /**
