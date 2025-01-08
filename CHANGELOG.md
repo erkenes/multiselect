@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/erkenes/multiselect/compare/0.2.2...0.3.0) (2025-01-08)
+
+
+### Features
+
+* Add initialize function ([1418725](https://github.com/erkenes/multiselect/commit/141872586ceea08517d441c363cff53f4d5f35f5))
+* Add support for optgroup ([909b274](https://github.com/erkenes/multiselect/commit/909b274c162e06406569c9e2dd1a38f7407c6b1c))
+
 ## [0.2.2](https://github.com/erkenes/multiselect/compare/0.2.1...0.2.2) (2024-10-15)
 
 
