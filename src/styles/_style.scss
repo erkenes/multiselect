@@ -161,6 +161,11 @@
                 color: $multiselect-search-placeholder-color;
             }
         }
+
+        .multi-select-group {
+            padding: 7px 10px;
+            width: 100%;
+        }
     }
 
     .multi-select-header, .multi-select-option, .multi-select-all {

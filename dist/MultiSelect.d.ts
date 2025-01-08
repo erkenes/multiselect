@@ -1,4 +1,5 @@
 import { MultiSelectOptions } from "./MultiSelectOptions";
+import { MultiSelectOptionI } from "./MultiSelectOption";
 /**
  * MultiSelect
  */
@@ -15,11 +16,9 @@ export declare class MultiSelect {
      */
     constructor(element: string | HTMLSelectElement | HTMLElement, options?: {});
     /**
-     * Check if an option is selected
-     *
-     * @param value
+     * Get the selected options
      */
-    isSelectedValue(value: string | undefined): boolean;
+    getSelectedOptions: () => MultiSelectOptionI[];
     /**
      * Count the selected options
      */
@@ -28,6 +27,12 @@ export declare class MultiSelect {
      * Check if the max selection is reached
      */
     maxSelectionReached(): boolean;
+    /**
+     * Get the translation for a key
+     *
+     * @param key
+     * @protected
+     */
     protected _getTranslation(key: string): string;
     /**
      * Create the template for the dropdown
@@ -55,17 +60,17 @@ export declare class MultiSelect {
     /**
      * select an option
      *
-     * @param value
+     * @param option
      * @param preventUpdate
      */
-    selectOption(value: string | undefined, preventUpdate?: boolean): void;
+    selectOption(option: MultiSelectOptionI | undefined, preventUpdate?: boolean): void;
     /**
      * deselect an option
      *
-     * @param value
+     * @param option
      * @param preventUpdate
      */
-    unselectOption(value: string | undefined, preventUpdate?: boolean): void;
+    unselectOption(option: MultiSelectOptionI | undefined, preventUpdate?: boolean): void;
     /**
      * select all options
      */
@@ -86,4 +91,18 @@ export declare class MultiSelect {
      * Reset the selection to the default values
      */
     reset(): void;
+    /**
+     * Generate a random string
+     *
+     * @param length
+     * @protected
+     */
+    protected generateRandomString(length: number): string;
+    /**
+     * Escape a css selector
+     *
+     * @param selector
+     * @protected
+     */
+    protected escapeCssSelector(selector: string): string;
 }

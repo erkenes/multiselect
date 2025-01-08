@@ -1,4 +1,4 @@
-import {MultiSelectData} from "./MultiSelectData";
+import {MultiSelectGroup} from "./MultiSelectGroup";
 
 export interface MultiSelectOptions {
     placeholder: string,
@@ -14,7 +14,7 @@ export interface MultiSelectOptions {
     height: number|string,
     dropdownWidth: number|string,
     dropdownHeight: number|string,
-    data: MultiSelectData[],
+    data: Map<string, MultiSelectGroup>,
     onChange: Function,
     onSelect: Function,
     onUnselect: Function,
