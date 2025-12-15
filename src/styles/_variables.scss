@@ -61,6 +61,10 @@ $multiselect-option-radio-border: 1px solid $multiselect-option-radio-border-col
 $multiselect-option-radio-border-radius: 4px !default;
 $multiselect-option-radio-margin-right: 14px !default;
 
+// make sure that the color is url-encoded (https://gist.githubusercontent.com/certainlyakey/e9c0d8f5c87ff47e3d5b/raw/d6ef3f8fac12bcb9d764fcee5081f06934e79304/library.scss)
+$multiselect-option-radio-checkmark-color: '%23949ba3' !default;
+$multiselect-option-radio-checkmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$multiselect-option-radio-checkmark-color}' viewBox='0 0 16 16'%3E%3Cpath d='M8 13.1l-8-8 2.1-2.2 5.9 5.9 5.9-5.9 2.1 2.2z'/%3E%3C/svg%3E") !default;
+
 // Option-List-Item: Text
 $multiselect-option-text-font-size: 16px !default;
 $multiselect-option-text-line-height: 20px !default;
