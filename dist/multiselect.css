@@ -112,7 +112,11 @@
 }
 .multi-select .multi-select-options .multi-select-option.multi-select-selected .multi-select-option-radio::after, .multi-select .multi-select-options .multi-select-all.multi-select-selected .multi-select-option-radio::after {
   content: "";
-  display: block;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   width: 16px;
   height: 16px;
   background-image: "";

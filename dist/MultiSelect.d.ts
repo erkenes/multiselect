@@ -105,4 +105,5 @@ export declare class MultiSelect {
      * @protected
      */
     protected escapeCssSelector(selector: string): string;
+    getOptions(): MultiSelectOptions;
 }

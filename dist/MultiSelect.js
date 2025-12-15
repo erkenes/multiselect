@@ -1,5 +1,6 @@
 import { MultiSelectOption } from "./MultiSelectOption";
 import { MultiSelectGroup } from "./MultiSelectGroup";
+import { MultiSelectPlaceholderTypeEnum, getPlaceholderType } from "./MultiSelectPlaceholderTypeEnum";
 /**
  * MultiSelect
  */
@@ -10,7 +11,7 @@ export class MultiSelect {
      * @param options
      */
     constructor(element, options = {}) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e, _f;
         this.defaultValues = [];
         /**
          * Get the selected options
@@ -34,12 +35,13 @@ export class MultiSelect {
             placeholder: 'Select item(s)',
             max: this.selectElement.multiple ? null : 1,
             min: null,
-            placeholderType: 'default',
+            placeholderType: MultiSelectPlaceholderTypeEnum.default,
             showMaxHint: false,
             search: select.options.length > 6,
             selectAll: false,
             closeListOnItemSelect: !select.multiple,
             name: '',
+            label: (_c = (_b = (_a = select.ariaLabel) !== null && _a !== void 0 ? _a : select.title) !== null && _b !== void 0 ? _b : select.dataset.title) !== null && _c !== void 0 ? _c : '',
             width: '',
             height: '',
             dropdownWidth: '',
@@ -60,11 +62,14 @@ export class MultiSelect {
             onUnselect: function () {
             }
         };
+        if (!defaults.label) {
+            defaults.label = defaults.placeholder;
+        }
         this.options = Object.assign(defaults, options);
         for (const prop in this.selectElement.dataset) {
             let dataProp = prop.replace('ms', '');
             dataProp = dataProp[0].toLowerCase() + dataProp.slice(1);
-            if ((_a = this.options[dataProp]) !== null && _a !== void 0 ? _a : false) {
+            if ((_d = this.options[dataProp]) !== null && _d !== void 0 ? _d : false) {
                 if (dataProp === 'min' || dataProp === 'max') {
                     this.options[dataProp] = parseInt(this.selectElement.dataset[prop]);
                 }
@@ -73,6 +78,10 @@ export class MultiSelect {
                 }
             }
         }
+        if (typeof this.options.placeholderType == 'string') {
+            this.options.placeholderType = getPlaceholderType(this.options.placeholderType);
+        }
+        console.log('typeof placeholderType', typeof this.options.placeholderType);
         this.options.selectAll = this.options.selectAll && this.options.max !== 1;
         this.name = this.selectElement.name
             ? this.selectElement.name
@@ -99,7 +108,7 @@ export class MultiSelect {
         }
         this.dropdown = this._template();
         // hide the original select element
-        (_c = (_b = this.selectElement) === null || _b === void 0 ? void 0 : _b.parentNode) === null || _c === void 0 ? void 0 : _c.insertBefore(this.dropdown, this.selectElement);
+        (_f = (_e = this.selectElement) === null || _e === void 0 ? void 0 : _e.parentNode) === null || _f === void 0 ? void 0 : _f.insertBefore(this.dropdown, this.selectElement);
         this.dropdown.appendChild(this.selectElement);
         this.selectElement.style.display = 'none';
         this._eventHandlers();
@@ -139,6 +148,7 @@ export class MultiSelect {
         dropdown.classList.add('multi-select', this.name);
         dropdown.dataset.msFor = this.selectElement.id;
         dropdown.id = this.selectElement.id + '-dropdown';
+        dropdown.ariaLabel = this.options.label;
         if (this.options.width) {
             dropdown.style.width = typeof this.options.width === 'number' ? this.options.width + 'px' : this.options.width;
         }
@@ -384,6 +394,7 @@ export class MultiSelect {
      * update the dropdown and the select element
      */
     update() {
+        console.log('update');
         const values = Array.from(this.selectElement.options).map((option) => option.value);
         this.options.data.forEach((group) => {
             group.getValues().filter((option) => values.includes(option.getValue())).map((option) => {
@@ -416,7 +427,7 @@ export class MultiSelect {
      * Update the placeholder in the header
      */
     updatePlaceholder() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         const headerElement = this.dropdown.querySelector('.multi-select-header');
         (_a = this.dropdown.querySelector('.multi-select-header-placeholder')) === null || _a === void 0 ? void 0 : _a.remove();
         if (this.options.showMaxHint && this.options.max) {
@@ -428,16 +439,26 @@ export class MultiSelect {
         if (this.countSelectedOptions() === 0) {
             this.dropdown.querySelectorAll('.multi-select-header-option').forEach((option) => option.remove());
             headerElement === null || headerElement === void 0 ? void 0 : headerElement.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-placeholder">${this.options.placeholder}</span>`);
+            console.log('countSelectedOptions');
             return;
         }
+        console.log('this.options.placeholderType', this.options.placeholderType);
         switch (this.options.placeholderType) {
-            case 'count':
+            case MultiSelectPlaceholderTypeEnum.count:
                 (_c = this.dropdown.querySelector('.multi-select-header-option')) === null || _c === void 0 ? void 0 : _c.remove();
-                let label = this._getTranslation('selected');
-                label = label.replace('%i', this.countSelectedOptions().toString());
+                console.log('placeholderType count');
+                const label = this._getTranslation('selected')
+                    .replace('%i', this.countSelectedOptions().toString());
                 headerElement === null || headerElement === void 0 ? void 0 : headerElement.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${label}</span>`);
                 break;
+            case MultiSelectPlaceholderTypeEnum.static:
+                console.log('placeholderType static');
+                (_d = this.dropdown.querySelector('.multi-select-header-option')) === null || _d === void 0 ? void 0 : _d.remove();
+                headerElement === null || headerElement === void 0 ? void 0 : headerElement.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${this.options.label}</span>`);
+                break;
+            case MultiSelectPlaceholderTypeEnum.default:
             default:
+                console.log('placeholderType default');
                 this.options.data.forEach((group) => {
                     group.getValues().forEach((option) => {
                         var _a;
@@ -505,6 +526,9 @@ export class MultiSelect {
      */
     escapeCssSelector(selector) {
         return selector.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+    }
+    getOptions() {
+        return this.options;
     }
 }
 //# sourceMappingURL=MultiSelect.js.map

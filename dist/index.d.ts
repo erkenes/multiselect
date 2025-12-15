@@ -1,2 +1,3 @@
 import { MultiSelect } from "./MultiSelect";
-export { MultiSelect };
+import { MultiSelectPlaceholderTypeEnum } from "./MultiSelectPlaceholderTypeEnum";
+export { MultiSelect, MultiSelectPlaceholderTypeEnum };
