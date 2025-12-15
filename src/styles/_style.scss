@@ -128,8 +128,12 @@
                     background-color: $multiselect-selected-background-color;
 
                     &::after {
-                        content: '';
-                        display: block;
+                        content: $multiselect-selected-icon-content;
+                        color: $multiselect-selected-icon-color;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: $multiselect-selected-icon-content-font-size;
                         width: 16px;
                         height: 16px;
                         background-image: $multiselect-selected-icon;
@@ -138,6 +142,10 @@
                         background-position: center;
                         margin-left: -1px;
                         margin-top: -1px;
+
+                        @if ($multiselect-selected-icon-font-family != null) {
+                            font-family: $multiselect-selected-icon-font-family;
+                        }
                     }
                 }
 
