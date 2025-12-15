@@ -58,14 +58,16 @@ export class MultiSelect {
                 searchPlaceholder: 'Search...',
                 selected: '%i selected',
             },
-            onInitialize: function () {
+            onInitialize: function (multiselect: MultiSelect): void {
             },
-            onChange: function () {
+            onChange: function (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect): void {
+                const select = option.getElement().closest('select');
+                select.dispatchEvent(new Event('change'));
             },
-            onSelect: function () {
+            onSelect: function (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect): void {
             },
-            onUnselect: function () {
-            }
+            onUnselect: function (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect): void {
+            },
         } as MultiSelectOptions;
 
         if (!defaults.label) {
@@ -128,7 +130,7 @@ export class MultiSelect {
 
         this._eventHandlers();
         this.update();
-        this.options.onInitialize();
+        this.options.onInitialize(this);
     }
 
     /**
@@ -301,12 +303,12 @@ export class MultiSelect {
                         this.close();
                     }
 
-                    this.options.onChange(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option);
+                    this.options.onChange(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
 
                     if (selected) {
-                        this.options.onSelect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option);
+                        this.options.onSelect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
                     } else {
-                        this.options.onUnselect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option);
+                        this.options.onUnselect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
                     }
 
                 }, {passive: true});
@@ -360,6 +362,21 @@ export class MultiSelect {
                 this.reset();
             });
         }
+
+        this.selectElement.addEventListener('multiselect.reset', () => {
+            this.reset();
+        });
+
+        this.selectElement.addEventListener('multiselect.update', () => {
+            this.update();
+        });
+        this.selectElement.addEventListener('change', (e) => {
+            if (e instanceof CustomEvent) {
+                return;
+            }
+
+            this.update();
+        });
     }
 
     /**

@@ -1,4 +1,6 @@
+import { MultiSelect } from "./MultiSelect";
 import {MultiSelectGroup} from "./MultiSelectGroup";
+import { MultiSelectOptionI } from "./MultiSelectOption";
 import {MultiSelectPlaceholderTypeEnum} from "./MultiSelectPlaceholderTypeEnum";
 
 export interface MultiSelectOptions {
@@ -17,10 +19,10 @@ export interface MultiSelectOptions {
     dropdownWidth: number|string,
     dropdownHeight: number|string,
     data: Map<string, MultiSelectGroup>,
-    onInitialize: Function,
-    onChange: Function,
-    onSelect: Function,
-    onUnselect: Function,
+    onInitialize: (multiselect: MultiSelect) => void,
+    onChange: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
+    onSelect: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
+    onUnselect: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
     showCheckbox: boolean,
     translations: {
         selectAll: string,
