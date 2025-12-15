@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://github.com/erkenes/multiselect/compare/0.5.0...0.6.0) (2025-12-15)
+
+
+### Features
+
+* optimize dispatching of event ([4c6f857](https://github.com/erkenes/multiselect/commit/4c6f8574fc2ab4b3a4ebcedd2b46f7215b5d0ed5))
+
+
+### Bug Fixes
+
+* update npmignore file ([756aaf2](https://github.com/erkenes/multiselect/commit/756aaf24c224ad949e6fd6c4ca5047469a196fed))
+
 ## [0.5.0](https://github.com/erkenes/multiselect/compare/0.4.0...0.5.0) (2025-12-15)
 
 
