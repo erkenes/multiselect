@@ -121,6 +121,8 @@
             }
 
             &.multi-select-selected {
+                background-color: $multiselected-selected-backgroundcolor;
+
                 .multi-select-option-radio {
                     border-color: $multiselect-selected-border-color;
                     background-color: $multiselect-selected-background-color;
