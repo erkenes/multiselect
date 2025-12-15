@@ -19,6 +19,7 @@ export interface MultiSelectOptions {
     onChange: Function,
     onSelect: Function,
     onUnselect: Function,
+    showCheckbox: boolean,
     translations: {
         selectAll: string,
         searchPlaceholder: string,

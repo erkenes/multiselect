@@ -91,6 +91,12 @@
             background: $multiselect-options-scrollbar-thumb-hover-color;
         }
 
+        &.multi-select-hide-checkbox {
+            .multi-select-option-radio {
+                display: none;
+            }
+        }
+
         .multi-select-option, .multi-select-all {
             padding: $multiselect-options-select-all-padding;
             height: $multiselect-options-select-all-height;
