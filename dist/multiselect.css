@@ -59,7 +59,7 @@
   right: 0;
   z-index: 999;
   margin-top: 5px;
-  padding: 5px;
+  padding: 0;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -78,6 +78,9 @@
 }
 .multi-select .multi-select-options::-webkit-scrollbar-thumb:hover {
   background: rgb(178.4375, 181.5, 184.5625);
+}
+.multi-select .multi-select-options.multi-select-hide-checkbox .multi-select-option-radio {
+  display: none;
 }
 .multi-select .multi-select-options .multi-select-option, .multi-select .multi-select-options .multi-select-all {
   padding: 4px 12px;
@@ -99,6 +102,9 @@
   color: inherit;
   font-size: 16px;
   line-height: 20px;
+}
+.multi-select .multi-select-options .multi-select-option.multi-select-selected, .multi-select .multi-select-options .multi-select-all.multi-select-selected {
+  background-color: transparent;
 }
 .multi-select .multi-select-options .multi-select-option.multi-select-selected .multi-select-option-radio, .multi-select .multi-select-options .multi-select-all.multi-select-selected .multi-select-option-radio {
   border-color: #fff;
@@ -139,7 +145,7 @@
   color: #b2b5b9;
 }
 .multi-select .multi-select-options .multi-select-group {
-  padding: 7px 10px;
+  padding: 7px 0;
   width: 100%;
 }
 .multi-select .multi-select-header, .multi-select .multi-select-option, .multi-select .multi-select-all {

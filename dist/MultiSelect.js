@@ -36,15 +36,16 @@ export class MultiSelect {
             min: null,
             placeholderType: 'default',
             showMaxHint: false,
-            search: true,
+            search: select.options.length > 6,
             selectAll: false,
-            closeListOnItemSelect: false,
+            closeListOnItemSelect: !select.multiple,
             name: '',
             width: '',
             height: '',
             dropdownWidth: '',
             dropdownHeight: '',
             data: new Map(),
+            showCheckbox: true,
             translations: {
                 selectAll: 'Select all',
                 searchPlaceholder: 'Search...',
@@ -163,6 +164,9 @@ export class MultiSelect {
         multiSelectHeader.appendChild(multiSelectHeaderPlaceholder);
         const multiSelectOptions = document.createElement('div');
         multiSelectOptions.classList.add('multi-select-options');
+        if (!this.options.showCheckbox) {
+            multiSelectOptions.classList.add('multi-select-hide-checkbox');
+        }
         if (this.options.dropdownWidth) {
             multiSelectOptions.style.width = typeof this.options.dropdownWidth === 'number' ? this.options.dropdownWidth + 'px' : this.options.dropdownWidth;
         }
