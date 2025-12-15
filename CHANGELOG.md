@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0](https://github.com/erkenes/multiselect/compare/0.4.0...0.5.0) (2025-12-15)
+
+
+### Features
+
+* add colorized icon for checkmark ([71f6d84](https://github.com/erkenes/multiselect/commit/71f6d840b25072e5258a20cb3ae9b108d7fa9d5b))
+* add label and static placeholder type ([c4b6933](https://github.com/erkenes/multiselect/commit/c4b6933f288f06cf111f1ceaddbaf4cafb3fb94f))
+* allow to change color of dropdown icon ([07de664](https://github.com/erkenes/multiselect/commit/07de664b137597d5cce04acfd9abf7480f59917f))
+* update dist files ([341d354](https://github.com/erkenes/multiselect/commit/341d3541c2ce66a5627dd280d3b275c3b7ed481b))
+
+
+### Bug Fixes
+
+* remove dist folder ([f3ee2d0](https://github.com/erkenes/multiselect/commit/f3ee2d0f1bd9b013f5fbc930028683c3e9b7bdde))
+
 ## [0.4.0](https://github.com/erkenes/multiselect/compare/0.3.0...0.4.0) (2025-12-15)
 
 
