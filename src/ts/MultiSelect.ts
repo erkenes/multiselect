@@ -43,7 +43,7 @@ export class MultiSelect {
             showMaxHint: false,
             search: select.options.length > 6,
             selectAll: false,
-            closeListOnItemSelect: false,
+            closeListOnItemSelect: !select.multiple,
             name: '',
             width: '',
             height: '',
