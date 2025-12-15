@@ -41,7 +41,7 @@ export class MultiSelect {
             min: null,
             placeholderType: 'default',
             showMaxHint: false,
-            search: true,
+            search: select.options.length > 6,
             selectAll: false,
             closeListOnItemSelect: false,
             name: '',
