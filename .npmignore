@@ -1,4 +1,9 @@
+.github/
 .npm-pack-all-tmp
 .idea
 .git
 *.tgz
+.gitignore
+.gitattributes
+.release-please-manifest.json
+release-please-config.json
