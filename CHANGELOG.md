@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/erkenes/multiselect/compare/0.3.0...0.4.0) (2025-12-15)
+
+
+### Features
+
+* add background color for selected option ([cce7076](https://github.com/erkenes/multiselect/commit/cce7076aadbad7097f55a80c7a4f2bc663c33feb))
+* close the select adter selection if it is not multiple ([3297043](https://github.com/erkenes/multiselect/commit/32970435dd2dcf142fe8e3f0cc3a14f4971fdb0c))
+* hide checkbox with option ([eab8e44](https://github.com/erkenes/multiselect/commit/eab8e4419b328f2a38197c3adb4073efe80781db))
+* show the search if the select has more than 6 options ([d0ca06e](https://github.com/erkenes/multiselect/commit/d0ca06e6ff9ca370ae4b1fbd0926f1b4d6ea08b7))
+* update readme and dist ([0198162](https://github.com/erkenes/multiselect/commit/0198162447b93bc9e52c50f28a9a34202881bcfe))
+* update styling ([527fc5f](https://github.com/erkenes/multiselect/commit/527fc5f1c599d77db6950efca97b2ac03ac721ce))
+
 ## [0.3.0](https://github.com/erkenes/multiselect/compare/0.2.2...0.3.0) (2025-01-08)
 
 
