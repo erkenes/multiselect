@@ -1,4 +1,5 @@
 import {MultiSelectGroup} from "./MultiSelectGroup";
+import {MultiSelectPlaceholderTypeEnum} from "./MultiSelectPlaceholderTypeEnum";
 
 export interface MultiSelectOptions {
     placeholder: string,
@@ -7,9 +8,10 @@ export interface MultiSelectOptions {
     showMaxHint: boolean,
     search: boolean,
     selectAll: boolean,
-    placeholderType: string,
+    placeholderType: MultiSelectPlaceholderTypeEnum|string,
     closeListOnItemSelect: boolean,
     name: string,
+    label: string,
     width: number|string,
     height: number|string,
     dropdownWidth: number|string,

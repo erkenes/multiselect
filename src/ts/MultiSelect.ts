@@ -1,6 +1,7 @@
 import {MultiSelectOptions} from "./MultiSelectOptions";
 import {MultiSelectOption,MultiSelectOptionI} from "./MultiSelectOption";
 import {MultiSelectGroup} from "./MultiSelectGroup";
+import {MultiSelectPlaceholderTypeEnum, getPlaceholderType} from "./MultiSelectPlaceholderTypeEnum";
 
 /**
  * MultiSelect
@@ -39,12 +40,13 @@ export class MultiSelect {
             placeholder: 'Select item(s)',
             max: this.selectElement.multiple ? null : 1,
             min: null,
-            placeholderType: 'default',
+            placeholderType: MultiSelectPlaceholderTypeEnum.default,
             showMaxHint: false,
             search: select.options.length > 6,
             selectAll: false,
             closeListOnItemSelect: !select.multiple,
             name: '',
+            label: select.ariaLabel ?? select.title ?? select.dataset.title ?? '',
             width: '',
             height: '',
             dropdownWidth: '',
@@ -66,6 +68,10 @@ export class MultiSelect {
             }
         } as MultiSelectOptions;
 
+        if (!defaults.label) {
+            defaults.label = defaults.placeholder;
+        }
+
         this.options = Object.assign(defaults, options);
         for (const prop in this.selectElement.dataset) {
             let dataProp = prop.replace('ms', '');
@@ -78,6 +84,10 @@ export class MultiSelect {
                     this.options[dataProp] = this.selectElement.dataset[prop];
                 }
             }
+        }
+
+        if (typeof this.options.placeholderType == 'string') {
+            this.options.placeholderType = getPlaceholderType(this.options.placeholderType);
         }
 
         this.options.selectAll = this.options.selectAll && this.options.max !== 1;
@@ -168,6 +178,7 @@ export class MultiSelect {
         dropdown.classList.add('multi-select', this.name);
         dropdown.dataset.msFor = this.selectElement.id;
         dropdown.id = this.selectElement.id + '-dropdown';
+        dropdown.ariaLabel = this.options.label;
 
         if (this.options.width) {
             dropdown.style.width = typeof this.options.width === 'number' ? this.options.width + 'px' : this.options.width;
@@ -507,14 +518,20 @@ export class MultiSelect {
         }
 
         switch (this.options.placeholderType) {
-            case 'count':
+            case MultiSelectPlaceholderTypeEnum.count:
                 this.dropdown.querySelector('.multi-select-header-option')?.remove();
 
-                let label = this._getTranslation('selected');
-                label = label.replace('%i', this.countSelectedOptions().toString());
+                const label = this._getTranslation('selected')
+                    .replace('%i', this.countSelectedOptions().toString());
 
                 headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${label}</span>`);
                 break;
+
+            case MultiSelectPlaceholderTypeEnum.static:
+                this.dropdown.querySelector('.multi-select-header-option')?.remove();
+                headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${this.options.label}</span>`);
+                break;
+
             default:
                 this.options.data.forEach((group) => {
                     group.getValues().forEach((option) => {
