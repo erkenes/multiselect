@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/erkenes/multiselect/compare/0.6.0...0.7.0) (2025-12-16)
+
+
+### Features
+
+* add apply button ([502f6fd](https://github.com/erkenes/multiselect/commit/502f6fd77ae786a7025eac4ae92fc8a85639b302))
+
 ## [0.6.0](https://github.com/erkenes/multiselect/compare/0.5.0...0.6.0) (2025-12-15)
 
 
