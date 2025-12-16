@@ -24,8 +24,14 @@ export interface MultiSelectOptions {
     onSelect: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
     onUnselect: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
     showCheckbox: boolean,
+    showApplyButton: boolean,
     translations: {
         selectAll: string,
         searchPlaceholder: string,
+        selected: string,
+        applyButton: string,
     }
+    applyButton: {
+        classList: string,
+    },
 }

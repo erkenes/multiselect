@@ -39,6 +39,7 @@ Include the scss file (or use the created dist file):
 | search                | boolean        | if options > 6   | Show a search field to filter the values. If the count of options is > 6 the search is shown                                        |
 | selectAll             | boolean        | false            | Show a button to de-/select all values. (`max` must be greater than 1 or null)                                                      |
 | closeListOnItemSelect | boolean        | if multiple      | Close the dropdown if a item is selected. If the select has the attribute `multiple` the values is false                            |
+| showApplyButton       | boolean        | true             | Show an apply button if the select allowse multiple and `closeListOnItemSelect` is set to false                                     |
 | showCheckbox          | boolean        | true             | Show the checkboxed next to the input text                                                                                          |
 | name                  | string         | null             | (optional) The name of the dropdown. The name-attribute of the Select-Element is selected.                                          |
 | width                 | number\|string | null             | (optional) force the width of the header                                                                                            |
@@ -56,6 +57,7 @@ Include the scss file (or use the created dist file):
     selectAll: 'Select all',
     searchPlaceholder: 'Search...',
     selected: '%i selected',
+    applyButton: 'Apply',
   }
 }
 ```

@@ -53,10 +53,15 @@ export class MultiSelect {
             dropdownHeight: '',
             data: new Map(),
             showCheckbox: true,
+            showApplyButton: false,
             translations: {
                 selectAll: 'Select all',
                 searchPlaceholder: 'Search...',
                 selected: '%i selected',
+                applyButton: 'Apply',
+            },
+            applyButton: {
+                classList: '',
             },
             onInitialize: function (multiselect: MultiSelect): void {
             },
@@ -225,10 +230,14 @@ export class MultiSelect {
         dropdown.appendChild(multiSelectOptions);
 
         if (this.options.search === true) {
+            const multiSelectSearchWrapper = document.createElement('div');
+            multiSelectSearchWrapper.classList.add('multi-select-search-wrapper');
+            multiSelectOptions.appendChild(multiSelectSearchWrapper);
+
             const multiSelectSearch = document.createElement('input');
             multiSelectSearch.classList.add('multi-select-search');
             multiSelectSearch.placeholder = this._getTranslation('searchPlaceholder');
-            multiSelectOptions.appendChild(multiSelectSearch);
+            multiSelectSearchWrapper.appendChild(multiSelectSearch);
         }
 
         if (this.options.selectAll) {
@@ -245,6 +254,24 @@ export class MultiSelect {
         const defaultGroupHtml = defaultGroup.render(multiSelectOptions, true);
         if (defaultGroupHtml) {
             multiSelectOptions.appendChild(defaultGroupHtml);
+        }
+
+        if (!this.options.closeListOnItemSelect && this.options.showApplyButton) {
+            const multiSelectApplyButtonWrapper = document.createElement('div');
+            multiSelectApplyButtonWrapper.classList.add('multi-select-apply-button-wrapper');
+            multiSelectOptions.appendChild(multiSelectApplyButtonWrapper);
+
+            const multiSelectApplyButton = document.createElement('button') as HTMLButtonElement;
+            multiSelectApplyButton.classList.add('multi-select-apply-button');
+            multiSelectApplyButton.type = 'button';
+            multiSelectApplyButton.classList.value = this.options.applyButton.classList;
+            multiSelectApplyButton.innerHTML = this._getTranslation('applyButton');
+
+            multiSelectApplyButton.addEventListener('click', function () {
+                this.close();
+            }.bind(this));
+
+            multiSelectApplyButtonWrapper.appendChild(multiSelectApplyButton);
         }
 
         this.options.data.forEach((group, key) => {
@@ -625,5 +652,10 @@ export class MultiSelect {
      */
     protected escapeCssSelector(selector: string): string {
         return selector.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+    }
+
+    public getDropdownElement(): HTMLElement
+    {
+        return this.dropdown;
     }
 }

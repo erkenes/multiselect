@@ -33,7 +33,27 @@
             }
 
             & + .multi-select-options {
-                display: flex;
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: min-content 1fr min-content;
+                gap: 0 0;
+                grid-auto-flow: row;
+                grid-template-areas:
+                    "search"
+                    "options"
+                    "button";
+                  
+                .multi-select-search-wrapper {
+                    grid-area: search;
+                }
+                
+                .multi-select-group {
+                    grid-area: options;
+                }
+                  
+                .multi-select-apply-button-wrapper {
+                    grid-area: button;
+                } 
             }
         }
 
@@ -72,24 +92,7 @@
         border-radius: $multiselect-options-border-radius;
         box-shadow: $multiselect-options-box-shadow;
         max-height: $multiselect-options-max-height;
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        &::-webkit-scrollbar {
-            width: $multiselect-options-scrollbar-width;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: $multiselect-options-scrollbar-track-color;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: $multiselect-options-scrollbar-thumb-color;
-        }
-
-        &::-webkit-scrollbar-thumb:hover {
-            background: $multiselect-options-scrollbar-thumb-hover-color;
-        }
+        overflow: hidden;
 
         &.multi-select-hide-checkbox {
             .multi-select-option-radio {
@@ -164,11 +167,19 @@
             border-radius: 0;
         }
 
+        .multi-select-apply-button-wrapper,
+        .multi-select-search-wrapper {
+            padding: $multiselect-search-margin;
+        }
+
+        .multi-select-apply-button-wrapper {
+            width: 100%;
+        }
+
         .multi-select-search {
             padding: $multiselect-search-padding;
             border: $multiselect-search-border;
             border-radius: $multiselect-search-border-radius;
-            margin: $multiselect-search-margin;
             width: 100%;
             outline: none;
             font-size: $multiselect-search-font-size;
@@ -181,6 +192,23 @@
         .multi-select-group {
             padding: 7px 0;
             width: 100%;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+                width: $multiselect-options-scrollbar-width;
+            }
+    
+            &::-webkit-scrollbar-track {
+                background: $multiselect-options-scrollbar-track-color;
+            }
+    
+            &::-webkit-scrollbar-thumb {
+                background: $multiselect-options-scrollbar-thumb-color;
+            }
+    
+            &::-webkit-scrollbar-thumb:hover {
+                background: $multiselect-options-scrollbar-thumb-hover-color;
+            }
         }
     }
 
