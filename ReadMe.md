@@ -49,6 +49,16 @@ Include the scss file (or use the created dist file):
 | data                  | Array          | []               | (optional) The options. The options will be read from the Select-Element                                                            |
 | translations          | JSON           | see Translations | (optional) Overwrite the labels                                                                                                     |
 
+### Options with Data-Attributes
+
+You can override the default values, passed through the JavaScript, with additional Data-Attributes and the prefix `ms-`.
+
+```html
+<select data-ms-placeholder="Select an element">
+  <option value="foo">example</option>
+</select>
+```
+
 ### Translations
 
 ```json5

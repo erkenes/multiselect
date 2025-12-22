@@ -79,16 +79,42 @@ export class MultiSelect {
             defaults.label = defaults.placeholder;
         }
 
+        const intOptions = [
+            'min',
+            'max',
+        ];
+        const boolOptions = [
+            'showMaxHint',
+            'search',
+            'selectAll',
+            'closeListOnItemSelect',
+            'showCheckbox',
+            'showApplyButton',
+        ];
+
         this.options = Object.assign(defaults, options);
         for (const prop in this.selectElement.dataset) {
+            if (!prop.startsWith('ms')) {
+                continue;
+            }
+
             let dataProp = prop.replace('ms', '');
             dataProp = dataProp[0].toLowerCase() + dataProp.slice(1) as string;
+            const value = <string>this.selectElement.dataset[prop];
 
-            if ((<string>this.options[dataProp]) ?? false) {
-                if (dataProp === 'min' || dataProp === 'max') {
-                    this.options[dataProp] = parseInt(<string>this.selectElement.dataset[prop]);
+            if (this.options.hasOwnProperty(dataProp)) {
+                if (boolOptions.includes(dataProp)) {
+                    this.options[dataProp] = new Boolean(value).valueOf();
+                }
+                else if (intOptions.includes(dataProp)) {
+                    const convValue = parseInt(value);
+                    if (Object.is(convValue, value)) {
+                        this.options[dataProp] = parseInt(value);
+                    } else {
+                        this.options[dataProp] = value;
+                    }
                 } else {
-                    this.options[dataProp] = this.selectElement.dataset[prop];
+                    this.options[dataProp] = value;
                 }
             }
         }
