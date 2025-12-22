@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/erkenes/multiselect/compare/0.7.0...0.7.1) (2025-12-22)
+
+
+### Bug Fixes
+
+* set options with data attributes ([551e0cc](https://github.com/erkenes/multiselect/commit/551e0cc7fb65c134717f1002338a20295d688b04))
+
 ## [0.7.0](https://github.com/erkenes/multiselect/compare/0.6.0...0.7.0) (2025-12-16)
 
 
