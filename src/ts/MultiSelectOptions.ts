@@ -34,4 +34,7 @@ export interface MultiSelectOptions {
     applyButton: {
         classList: string,
     },
+    button: {
+        classList: string,
+    }
 }

@@ -5,46 +5,53 @@ $multiselect-border-radius: 5px !default;
 $multiselect-color: #212529 !default;
 $multiselect-font-size: 16px !default;
 
-// Header
-$multiselect-header-border-color: #dee2e6 !default;
-$multiselect-header-border: 1px solid $multiselect-header-border-color !default;
-$multiselect-header-padding: 7px 30px 7px 12px !default;
-$multiselect-header-gap: 5px !default;
-$multiselect-header-min-height: 45px !default;
-$multiselect-header-active-border-color: color.adjust($multiselect-header-border-color, $lightness: -10%) !default;
+// Button
+$multiselect-button-background: #fff;
+$multiselect-button-border-color: #dee2e6 !default;
+$multiselect-button-border: 1px solid $multiselect-button-border-color !default;
+$multiselect-button-padding: 7px 30px 7px 12px !default;
+$multiselect-button-gap: 5px !default;
+$multiselect-button-min-height: 45px !default;
+$multiselect-button-active-border-color: color.adjust($multiselect-button-border-color, $lightness: -10%) !default;
+
+// Button: Placeholder
 $multiselect-placeholder-color: color.adjust(#212529, $lightness: 30%) !default;
 $multiselect-placeholder-font-size: $multiselect-font-size !default;
+$multiselect-placeholder-padding: 3px 8px !default;
 
-// Header: Max-Option
-$multiselect-header-max-font-size: 14px !default;
-$multiselect-header-max-color: color.adjust(#212529, $lightness: 30%) !default;
+// Button: Max-Text
+$multiselect-max-text-font-size: 14px !default;
+$multiselect-max-text-color: color.adjust(#212529, $lightness: 30%) !default;
 
-// Header: Selected Options
-$multiselect-options-background-color: #fff !default;
-$multiselect-options-border-radius: 5px !default;
-$multiselect-options-box-shadow: 0 0 10px rgba(0, 0, 0, .1) !default;
-$multiselect-options-max-height: 200px !default;
-$multiselect-options-margin-top: 5px !default;
-$multiselect-options-padding: 0 !default;
+// Dropdown
+$multiselect-dropdown-background-color: #fff !default;
+$multiselect-dropdown-border-radius: 5px !default;
+$multiselect-dropdown-box-shadow: 0 0 10px rgba(0, 0, 0, .1) !default;
+$multiselect-dropdown-max-height: 200px !default;
+$multiselect-dropdown-margin-top: 5px !default;
+$multiselect-dropdown-padding: 0 !default;
 
-// Header: Selected Option-Item
-$multiselect-header-option-background-color: #fff !default;
-$multiselect-header-option-font-size: 14px !default;
-$multiselect-header-option-padding: 3px 8px !default;
-$multiselect-header-option-border-radius: 5px !default;
-$multiselect-options-scrollbar-width: 5px !default;
-$multiselect-options-scrollbar-track-color: #f0f1f3 !default;
-$multiselect-options-scrollbar-thumb-color: #cdcfd1 !default;
-$multiselect-options-scrollbar-thumb-hover-color: color.adjust(#cdcfd1, $lightness: -10%) !default;
+// Button: Selected Text
+$multiselect-selected-option-background-color: #fff !default;
+$multiselect-selected-option-font-size: 14px !default;
+$multiselect-selected-option-padding: 3px 8px !default;
+$multiselect-selected-option-border-radius: 5px !default;
 
+// Dropdown scrollbar
+$multiselect-dropdown-scrollbar-width: 5px !default;
+$multiselect-dropdown-scrollbar-track-color: #f0f1f3 !default;
+$multiselect-dropdown-scrollbar-thumb-color: #cdcfd1 !default;
+$multiselect-dropdown-scrollbar-thumb-hover-color: color.adjust(#cdcfd1, $lightness: -10%) !default;
+
+// Option-List: Option
+$multiselect-option-padding: 4px 12px !default;
+$multiselect-option-height: 42px !default;
+$multiselect-option-border-color: #f1f3f5 !default;
 
 // Option-List: Select-All
-$multiselect-options-select-all-padding: 4px 12px !default;
-$multiselect-options-select-all-height: 42px !default;
-$multiselect-options-select-all-border-color: #f1f3f5 !default;
-$multiselect-options-select-all-border-bottom: 1px solid $multiselect-options-select-all-border-color !default;
+$multiselect-select-all-border-bottom: 1px solid $multiselect-option-border-color !default;
 
-// Option-List: Search
+// Dropdown: Search
 $multiselect-search-padding: 7px 10px !default;
 $multiselect-search-border-color: #dee2e6 !default;
 $multiselect-search-border: 1px solid $multiselect-search-border-color !default;
@@ -68,15 +75,15 @@ $multiselect-option-radio-checkmark: url("data:image/svg+xml,%3Csvg xmlns='http:
 // Option-List-Item: Text
 $multiselect-option-text-font-size: 16px !default;
 $multiselect-option-text-line-height: 20px !default;
-$multiselect-option-background-color-hover: #f3f4f7 !default;
+$multiselect-option-hover-background-color: #f3f4f7 !default;
 
 // Option-List-Item: Selected
-$multiselect-selected-border-color: #fff !default;
-$multiselect-selected-background-color: #fff !default;
-$multiselect-selected-color: #000 !default;
-$multiselect-selected-icon: '' !default;
-$multiselected-selected-backgroundcolor: transparent !default;
-$multiselect-selected-icon-content: '' !default;
-$multiselect-selected-icon-content-font-size: 10px !default;
-$multiselect-selected-icon-color: transparent !default;
-$multiselect-selected-icon-font-family: null !default;
+$multiselect-option-selected-border-color: #fff !default;
+$multiselect-option-selected-background-color: #fff !default;
+$multiselect-option-selected-color: #000 !default;
+$multiselect-option-selected-backgroundcolor: transparent !default;
+$multiselect-option-selected-icon-content: '' !default;
+$multiselect-option-selected-icon-font-size: 10px !default;
+$multiselect-option-selected-icon-color: transparent !default;
+$multiselect-option-selected-icon: '' !default;
+$multiselect-option-selected-icon-font-family: null !default;

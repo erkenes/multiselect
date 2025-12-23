@@ -13,6 +13,9 @@ export class MultiSelect {
 
     protected name: string;
 
+    protected buttonWrapperElement: HTMLDivElement;
+    protected buttonElement: HTMLButtonElement;
+
     protected defaultValues: string[] = [];
 
     protected dropdown: HTMLElement;
@@ -20,7 +23,7 @@ export class MultiSelect {
     /**
      *
      * @param element {string|HTMLSelectElement}
-     * @param options
+     * @param options {{}|MultiSelectOptions}
      */
     constructor(element: string|HTMLSelectElement|HTMLElement, options = {}) {
         let select = element;
@@ -35,18 +38,48 @@ export class MultiSelect {
         }
 
         this.selectElement = select as HTMLSelectElement;
+        this.setOptions(options);
 
+        this.name = this.selectElement.name
+            ? this.selectElement.name
+            : 'multiselect--' + Math.floor(Math.random() * 1000000);
+
+        this._initValues();
+
+        this._templateButton();
+        this._templateDropdown();
+
+        this.selectElement?.parentNode?.insertBefore(this.buttonWrapperElement, this.selectElement);
+        this.buttonWrapperElement.appendChild(this.selectElement);
+        this.selectElement.style.display = 'none';
+
+        this._positionDropdown();
+
+        window.addEventListener('resize', this._positionDropdown, {passive: true});
+        window.addEventListener('scroll', this._positionDropdown, {passive: true, capture: true});
+
+        this._eventHandlers();
+        this.update();
+        this.options.onInitialize(this);
+    }
+
+    /**
+     * Set the options
+     * @param options {{}|MultiSelectOptions}
+     */
+    protected setOptions(options = {})
+    {
         let defaults = {
             placeholder: 'Select item(s)',
             max: this.selectElement.multiple ? null : 1,
             min: null,
             placeholderType: MultiSelectPlaceholderTypeEnum.default,
             showMaxHint: false,
-            search: select.options.length > 6,
+            search: this.selectElement.options.length > 6,
             selectAll: false,
-            closeListOnItemSelect: !select.multiple,
+            closeListOnItemSelect: !this.selectElement.multiple,
             name: '',
-            label: select.ariaLabel ?? select.title ?? select.dataset.title ?? '',
+            label: this.selectElement.ariaLabel ?? this.selectElement.title ?? this.selectElement.dataset.title ?? '',
             width: '',
             height: '',
             dropdownWidth: '',
@@ -63,6 +96,9 @@ export class MultiSelect {
             applyButton: {
                 classList: '',
             },
+            button: {
+                classList: '',
+            },
             onInitialize: function (multiselect: MultiSelect): void {
             },
             onChange: function (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect): void {
@@ -74,10 +110,6 @@ export class MultiSelect {
             onUnselect: function (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect): void {
             },
         } as MultiSelectOptions;
-
-        if (!defaults.label) {
-            defaults.label = defaults.placeholder;
-        }
 
         const intOptions = [
             'min',
@@ -119,21 +151,28 @@ export class MultiSelect {
             }
         }
 
+        if (!defaults.label) {
+            this.options.label = this.options.placeholder;
+        }
+
         if (typeof this.options.placeholderType == 'string') {
             this.options.placeholderType = getPlaceholderType(this.options.placeholderType);
         }
 
         this.options.selectAll = this.options.selectAll && this.options.max !== 1;
+    }
 
-        this.name = this.selectElement.name
-            ? this.selectElement.name
-            : 'multi-select-' + Math.floor(Math.random() * 1000000);
-
+    /**
+     * Init the values
+     */
+    protected _initValues(): void
+    {
+        // add a default group
         if (!this.options.data.has('_default')) {
             this.options.data.set('_default', new MultiSelectGroup(null, ''));
         }
 
-        if (this.options.data.size === 1) {
+        if (this.options.data.size === 1 && this.options.data.has('_default')) {
             this.defaultValues = this.selectElement.selectedOptions ? Array.from(this.selectElement.selectedOptions).map((option) => option.value) : [];
             const childNodes = Array.from(this.selectElement.childNodes);
 
@@ -151,17 +190,6 @@ export class MultiSelect {
                 }
             });
         }
-
-        this.dropdown = this._template();
-
-        // hide the original select element
-        this.selectElement?.parentNode?.insertBefore(this.dropdown, this.selectElement);
-        this.dropdown.appendChild(this.selectElement);
-        this.selectElement.style.display = 'none';
-
-        this._eventHandlers();
-        this.update();
-        this.options.onInitialize(this);
     }
 
     /**
@@ -206,89 +234,58 @@ export class MultiSelect {
      * Create the template for the dropdown
      * @protected
      */
-    protected _template() {
+    protected _templateDropdown() {
         const dropdown = document.createElement('div');
-        dropdown.classList.add('multi-select', this.name);
         dropdown.dataset.msFor = this.selectElement.id;
-        dropdown.id = this.selectElement.id + '-dropdown';
+        dropdown.dataset.msForName = this.name;
         dropdown.ariaLabel = this.options.label;
-
-        if (this.options.width) {
-            dropdown.style.width = typeof this.options.width === 'number' ? this.options.width + 'px' : this.options.width;
-        }
-        if (this.options.height) {
-            dropdown.style.height = typeof this.options.height === 'number' ? this.options.height + 'px' : this.options.height;
-        }
-
-        const multiSelectHeader = document.createElement('div');
-        multiSelectHeader.classList.add('multi-select-header');
-        if (this.options.width) {
-            multiSelectHeader.style.width = typeof this.options.width === 'number' ? this.options.width + 'px' : this.options.width;
-        }
-        if (this.options.height) {
-            multiSelectHeader.style.height = typeof this.options.height === 'number' ? this.options.height + 'px' : this.options.height;
-        }
-        dropdown.appendChild(multiSelectHeader);
-
-        const multiSelectHeaderMax = document.createElement('span');
-        multiSelectHeaderMax.classList.add('multi-select-header-max');
-        multiSelectHeaderMax.innerHTML = this.options.showMaxHint ? this.countSelectedOptions() + '/' + this.options.max : '';
-        multiSelectHeader.appendChild(multiSelectHeaderMax);
-
-        const multiSelectHeaderPlaceholder = document.createElement('span');
-        multiSelectHeaderPlaceholder.classList.add('multi-select-header-placeholder');
-        multiSelectHeaderPlaceholder.innerHTML = this.options.placeholder;
-        multiSelectHeader.appendChild(multiSelectHeaderPlaceholder);
-
-        const multiSelectOptions = document.createElement('div');
-        multiSelectOptions.classList.add('multi-select-options');
+        dropdown.classList.add('multiselect-dropdown');
 
         if (!this.options.showCheckbox) {
-            multiSelectOptions.classList.add('multi-select-hide-checkbox');
+            dropdown.classList.add('multiselect-hide-checkbox');
         }
 
         if (this.options.dropdownWidth) {
-            multiSelectOptions.style.width = typeof this.options.dropdownWidth === 'number' ? this.options.dropdownWidth + 'px' : this.options.dropdownWidth;
+            dropdown.style.width = typeof this.options.dropdownWidth === 'number' ? this.options.dropdownWidth + 'px' : this.options.dropdownWidth;
         }
         if (this.options.dropdownHeight) {
-            multiSelectOptions.style.height = typeof this.options.dropdownHeight === 'number' ? this.options.dropdownHeight + 'px' : this.options.dropdownHeight;
+            dropdown.style.height = typeof this.options.dropdownHeight === 'number' ? this.options.dropdownHeight + 'px' : this.options.dropdownHeight;
         }
-        dropdown.appendChild(multiSelectOptions);
 
         if (this.options.search === true) {
             const multiSelectSearchWrapper = document.createElement('div');
-            multiSelectSearchWrapper.classList.add('multi-select-search-wrapper');
-            multiSelectOptions.appendChild(multiSelectSearchWrapper);
+            multiSelectSearchWrapper.classList.add('multiselect-search-wrapper');
+            dropdown.appendChild(multiSelectSearchWrapper);
 
             const multiSelectSearch = document.createElement('input');
-            multiSelectSearch.classList.add('multi-select-search');
+            multiSelectSearch.classList.add('multiselect-search');
             multiSelectSearch.placeholder = this._getTranslation('searchPlaceholder');
             multiSelectSearchWrapper.appendChild(multiSelectSearch);
         }
 
         if (this.options.selectAll) {
             const selectAll = document.createElement('div');
-            selectAll.classList.add('multi-select-all');
+            selectAll.classList.add('multiselect-select-all');
             selectAll.innerHTML = `
-                <span class="multi-select-option-radio"></span>
-                <span class="multi-select-option-text">${this._getTranslation('selectAll')}</span>
+                <span class="multiselect-option-radio"></span>
+                <span class="multiselect-option-text">${this._getTranslation('selectAll')}</span>
             `;
-            multiSelectOptions.appendChild(selectAll);
+            dropdown.appendChild(selectAll);
         }
 
         const defaultGroup = this.options.data.get('_default');
-        const defaultGroupHtml = defaultGroup.render(multiSelectOptions, true);
+        const defaultGroupHtml = defaultGroup.render(dropdown, true);
         if (defaultGroupHtml) {
-            multiSelectOptions.appendChild(defaultGroupHtml);
+            dropdown.appendChild(defaultGroupHtml);
         }
 
         if (!this.options.closeListOnItemSelect && this.options.showApplyButton) {
             const multiSelectApplyButtonWrapper = document.createElement('div');
-            multiSelectApplyButtonWrapper.classList.add('multi-select-apply-button-wrapper');
-            multiSelectOptions.appendChild(multiSelectApplyButtonWrapper);
+            multiSelectApplyButtonWrapper.classList.add('multiselect-apply-button-wrapper');
+            dropdown.appendChild(multiSelectApplyButtonWrapper);
 
             const multiSelectApplyButton = document.createElement('button') as HTMLButtonElement;
-            multiSelectApplyButton.classList.add('multi-select-apply-button');
+            multiSelectApplyButton.classList.add('multiselect-apply-button');
             multiSelectApplyButton.type = 'button';
             multiSelectApplyButton.classList.value = this.options.applyButton.classList;
             multiSelectApplyButton.innerHTML = this._getTranslation('applyButton');
@@ -305,18 +302,77 @@ export class MultiSelect {
                 return;
             }
 
-            const html = group.render(multiSelectOptions, true);
+            const html = group.render(dropdown, true);
             if (!html) {
                 return;
             }
 
-            multiSelectOptions.appendChild(html);
+            dropdown.appendChild(html);
         });
 
-        let element = document.createElement('div');
-        element.appendChild(dropdown);
+        this.dropdown = dropdown;
+        document.body.appendChild(this.dropdown);
+    }
 
-        return element;
+    /**
+     * Create the template for the button
+     * @protected
+     */
+    protected _templateButton(): void
+    {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('multiselect');
+
+        const button = document.createElement('button');
+        button.classList.value = this.options.button.classList;
+        button.classList.add('multiselect-button');
+        button.dataset.msFor = this.selectElement.id;
+        button.dataset.msForName = this.name;
+        button.id = this.selectElement.id + '-dropdown';
+        button.ariaLabel = this.options.label;
+        button.type = 'button';
+
+        if (this.options.width) {
+            button.style.width = typeof this.options.width === 'number' ? this.options.width + 'px' : this.options.width;
+        }
+        if (this.options.height) {
+            button.style.height = typeof this.options.height === 'number' ? this.options.height + 'px' : this.options.height;
+        }
+
+        const multiSelectHeaderMax = document.createElement('span');
+        multiSelectHeaderMax.classList.add('multiselect-max-text');
+        multiSelectHeaderMax.innerHTML = this.options.showMaxHint ? this.countSelectedOptions() + '/' + this.options.max : '';
+        button.appendChild(multiSelectHeaderMax);
+
+        const multiSelectHeaderPlaceholder = document.createElement('span');
+        multiSelectHeaderPlaceholder.classList.add('multiselect-placeholder');
+        multiSelectHeaderPlaceholder.innerHTML = this.options.placeholder;
+        button.appendChild(multiSelectHeaderPlaceholder);
+
+        wrapper.appendChild(button);
+
+        this.buttonWrapperElement = wrapper;
+        this.buttonElement = button;
+    }
+
+    /**
+     * Positioniert das Dropdown relativ zum ursprünglichen Select-Platzhalter
+     * @protected
+     */
+    protected _positionDropdown = () => {
+        if (!this.buttonWrapperElement) {
+            return;
+        }
+
+        const anchorRect = this.buttonWrapperElement.getBoundingClientRect();
+
+        this.dropdown.style.position = 'absolute';
+        this.dropdown.style.top = `${anchorRect.bottom + window.scrollY}px`;
+        this.dropdown.style.left = `${anchorRect.left + window.scrollX}px`;
+        const width = anchorRect.width || this.dropdown.getBoundingClientRect().width;
+        if (width) {
+            this.dropdown.style.width = `${width}px`;
+        }
     }
 
     /**
@@ -325,12 +381,7 @@ export class MultiSelect {
      * @protected
      */
     protected _eventHandlers() {
-        const headerElement = this.dropdown.querySelector('.multi-select-header');
-        if (!headerElement) {
-            return;
-        }
-
-        headerElement.addEventListener('click', () => {
+        this.buttonElement.addEventListener('click', () => {
             this.toggle();
         });
 
@@ -349,19 +400,19 @@ export class MultiSelect {
                     }
 
                     if (this.options.search === true) {
-                        (this.dropdown.querySelector('.multi-select-search') as HTMLInputElement).value = '';
+                        (this.dropdown.querySelector('.multiselect-search') as HTMLInputElement).value = '';
                     }
 
                     if (this.options.closeListOnItemSelect === true) {
                         this.close();
                     }
 
-                    this.options.onChange(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
+                    this.options.onChange(optionElement.dataset.value, optionElement.querySelector('.multiselect-option-text')?.innerHTML, option, this);
 
                     if (selected) {
-                        this.options.onSelect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
+                        this.options.onSelect(optionElement.dataset.value, optionElement.querySelector('.multiselect-option-text')?.innerHTML, option, this);
                     } else {
-                        this.options.onUnselect(optionElement.dataset.value, optionElement.querySelector('.multi-select-option-text')?.innerHTML, option, this);
+                        this.options.onUnselect(optionElement.dataset.value, optionElement.querySelector('.multiselect-option-text')?.innerHTML, option, this);
                     }
 
                 }, {passive: true});
@@ -369,20 +420,20 @@ export class MultiSelect {
         });
 
         if (this.options.search) {
-            let search = this.dropdown.querySelector('.multi-select-search') as HTMLInputElement;
+            let search = this.dropdown.querySelector('.multiselect-search') as HTMLInputElement;
             search.addEventListener('input', () => {
-                (this.dropdown.querySelectorAll('.multi-select-option') as NodeListOf<HTMLElement>).forEach((option) => {
+                (this.dropdown.querySelectorAll('.multiselect-option') as NodeListOf<HTMLElement>).forEach((option) => {
                     if (option) {
-                        option.style.display = option.querySelector('.multi-select-option-text')?.innerHTML.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ? 'flex' : 'none';
+                        option.style.display = option.querySelector('.multiselect-option-text')?.innerHTML.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ? 'flex' : 'none';
                     }
                 });
             });
         }
 
         if (this.options.selectAll) {
-            let selectAllButton = this.dropdown.querySelector('.multi-select-all');
+            let selectAllButton = this.dropdown.querySelector('.multiselect-select-all');
             selectAllButton?.addEventListener('click', () => {
-                let allSelected = selectAllButton.classList.contains('multi-select-selected');
+                let allSelected = selectAllButton.classList.contains('multiselect-selected');
 
                 if (allSelected) {
                     this.unselectAll();
@@ -401,7 +452,11 @@ export class MultiSelect {
         document.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
 
-            if (!target.closest('.' + this.escapeCssSelector(this.name)) && !target.closest('label[for="' + this.selectElement.id + '"]') && target !== this.selectElement) {
+            const dropdown = target.closest('.multiselect-dropdown');
+            const trigger = target.closest('.multiselect-button');
+            const label = target.closest('label[for="' + this.selectElement.id + '"]');
+
+            if (dropdown != this.dropdown && trigger != this.buttonElement && !label && target !== this.selectElement) {
                 this.close();
             }
         });
@@ -436,21 +491,31 @@ export class MultiSelect {
      * Open the dropdown
      */
     public open() {
-        this.dropdown.querySelector('.multi-select-header')?.classList.add('multi-select-header-active');
+        this._positionDropdown();
+
+        this.buttonElement.classList.add('active');
+        this.dropdown.classList.add('open');
     }
 
     /**
      * Close the dropdown
      */
     public close() {
-        this.dropdown.querySelector('.multi-select-header')?.classList.remove('multi-select-header-active');
+        this.buttonElement.classList.remove('active');
+        this.dropdown.classList.remove('open');
     }
 
     /**
      * Toggle the dropdown
      */
     public toggle() {
-        this.dropdown.querySelector('.multi-select-header')?.classList.toggle('multi-select-header-active');
+        if (this.buttonElement.classList.contains('active')) {
+            this.close();
+
+            return;
+        }
+
+        this.open();
     }
 
     /**
@@ -473,7 +538,7 @@ export class MultiSelect {
         }
 
         option.select();
-        option.getRenderedElement().classList.add('multi-select-selected');
+        option.getRenderedElement().classList.add('multiselect-selected');
 
         if (!preventUpdate) {
             this.update();
@@ -497,7 +562,7 @@ export class MultiSelect {
         }
 
         option.unselect();
-        option.getRenderedElement().classList.remove('multi-select-selected');
+        option.getRenderedElement().classList.remove('multiselect-selected');
 
         if (!preventUpdate) {
             this.update();
@@ -538,12 +603,12 @@ export class MultiSelect {
 
         this.options.data.forEach((group) => {
             group.getValues().filter((option) => values.includes(option.getValue())).map((option) => {
-                let optionHtml = this.dropdown.querySelector(`.multi-select-option[data-value="${option.getValue()}"]`);
+                let optionHtml = this.dropdown.querySelector(`.multiselect-option[data-value="${option.getValue()}"]`);
                 if (optionHtml) {
                     if (option.isSelected()) {
-                        optionHtml.classList.add('multi-select-selected');
+                        optionHtml.classList.add('multiselect-selected');
                     } else {
-                        optionHtml.classList.remove('multi-select-selected');
+                        optionHtml.classList.remove('multiselect-selected');
                     }
                 }
             });
@@ -551,13 +616,13 @@ export class MultiSelect {
 
         // update the state of the select-all element
         if (this.options.selectAll) {
-            let selectAllButton = this.dropdown.querySelector('.multi-select-all');
+            let selectAllButton = this.dropdown.querySelector('.multiselect-select-all');
 
             if (selectAllButton) {
                 if (this.countSelectedOptions() === this.selectElement.options.length) {
-                    selectAllButton.classList.add('multi-select-selected');
+                    selectAllButton.classList.add('multiselect-selected');
                 } else {
-                    selectAllButton.classList.remove('multi-select-selected');
+                    selectAllButton.classList.remove('multiselect-selected');
                 }
             }
         }
@@ -569,43 +634,41 @@ export class MultiSelect {
      * Update the placeholder in the header
      */
     protected updatePlaceholder(): void {
-        const headerElement = this.dropdown.querySelector('.multi-select-header');
-
-        this.dropdown.querySelector('.multi-select-header-placeholder')?.remove();
+        this.buttonElement.querySelector('.multiselect-placeholder')?.remove();
 
         if (this.options.showMaxHint && this.options.max) {
-            const headerMax = this.dropdown.querySelector('.multi-select-header-max');
+            const headerMax = this.buttonElement.querySelector('.multiselect-max-text');
             if (headerMax) {
                 headerMax.innerHTML = this.countSelectedOptions() + '/' + this.options?.max;
             }
         }
 
         if (this.countSelectedOptions() === 0) {
-            this.dropdown.querySelectorAll('.multi-select-header-option').forEach((option) => option.remove());
-            headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-placeholder">${this.options.placeholder}</span>`);
+            this.buttonElement.querySelectorAll('.multiselect-selected-option').forEach((option) => option.remove());
+            this.buttonElement?.insertAdjacentHTML('afterbegin', `<span class="multiselect-placeholder">${this.options.placeholder}</span>`);
 
             return;
         }
-
+        
         switch (this.options.placeholderType) {
             case MultiSelectPlaceholderTypeEnum.count:
-                this.dropdown.querySelector('.multi-select-header-option')?.remove();
+                this.buttonElement.querySelector('.multiselect-selected-option')?.remove();
 
                 const label = this._getTranslation('selected')
                     .replace('%i', this.countSelectedOptions().toString());
 
-                headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${label}</span>`);
+                this.buttonElement?.insertAdjacentHTML('afterbegin', `<span class="multiselect-selected-option">${label}</span>`);
                 break;
 
             case MultiSelectPlaceholderTypeEnum.static:
-                this.dropdown.querySelector('.multi-select-header-option')?.remove();
-                headerElement?.insertAdjacentHTML('afterbegin', `<span class="multi-select-header-option">${this.options.label}</span>`);
+                this.buttonElement.querySelector('.multiselect-selected-option')?.remove();
+                this.buttonElement?.insertAdjacentHTML('afterbegin', `<span class="multiselect-selected-option">${this.options.label}</span>`);
                 break;
 
             default:
                 this.options.data.forEach((group) => {
                     group.getValues().forEach((option) => {
-                        const headerOption = this.dropdown.querySelector(`.multi-select-header-option[data-value="${option.getValue()}"]`);
+                        const headerOption = this.buttonElement.querySelector(`.multiselect-selected-option[data-value="${option.getValue()}"]`);
                         if (!option.isSelected()) {
                             headerOption?.remove();
 
@@ -616,18 +679,17 @@ export class MultiSelect {
                             return;
                         }
 
-                        const label = this.dropdown.querySelector(`.multi-select-option[data-value="${option.getValue()}"] .multi-select-option-text`)?.innerHTML;
-
+                        const label = this.dropdown.querySelector(`.multiselect-option[data-value="${option.getValue()}"] .multiselect-option-text`)?.innerHTML;
                         const opt = document.createElement('div');
-                        opt.classList.add('multi-select-header-option');
+                        opt.classList.add('multiselect-selected-option');
                         opt.dataset.value = option.getValue();
                         opt.innerHTML = label;
 
-                        const maxHint = this.dropdown.querySelector('.multi-select-header-max');
+                        const maxHint = this.buttonElement.querySelector('.multiselect-max-text');
                         if (maxHint) {
                             maxHint.insertAdjacentElement('beforebegin', opt);
                         } else {
-                            headerElement?.appendChild(opt);
+                            this.buttonElement?.appendChild(opt);
                         }
                     });
                 });

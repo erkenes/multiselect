@@ -84,15 +84,15 @@ export class MultiSelectGroup implements MultiSelectGroupI {
         }
 
         const groupElement = document.createElement('div');
-        groupElement.classList.add('multi-select-group');
+        groupElement.classList.add('multiselect-group');
 
         const groupLabel = document.createElement('div');
-        groupLabel.classList.add('multi-select-group-label');
+        groupLabel.classList.add('multiselect-group-label');
         groupLabel.innerHTML = this.getLabel();
         groupElement.appendChild(groupLabel);
 
-        const groupOptions = document.createElement('div');
-        groupOptions.classList.add('multi-select-group-options');
+        const groupOptions = document.createElement('ul');
+        groupOptions.classList.add('multiselect-group-options');
         groupElement.appendChild(groupOptions);
 
         this.getValues().forEach((option) => {
@@ -100,7 +100,7 @@ export class MultiSelectGroup implements MultiSelectGroupI {
         });
 
         const divider = document.createElement('div');
-        divider.classList.add('multi-select-divider');
+        divider.classList.add('multiselect-divider');
         groupElement.appendChild(divider);
 
         if (updateRenderedElement) {
