@@ -81,15 +81,15 @@ export class MultiSelectOption implements MultiSelectOptionI {
     }
 
     public render(group: MultiSelectGroupI, updateRenderedElement: boolean = false): HTMLElement {
-        const option = document.createElement('div');
-        option.classList.add('multi-select-option');
+        const option = document.createElement('li');
+        option.classList.add('multiselect-option');
         if (this.isSelected()) {
-            option.classList.add('multi-select-selected');
+            option.classList.add('multiselect-selected');
         }
         option.dataset.value = this.getValue();
         option.innerHTML = `
-                <span class="multi-select-option-radio"></span>
-                <span class="multi-select-option-text">${this.getHtml() ? this.getHtml() : (this.getLabel()  ? this.getLabel(): this.getValue())}</span>
+                <span class="multiselect-option-radio"></span>
+                <span class="multiselect-option-text">${this.getHtml() ? this.getHtml() : (this.getLabel()  ? this.getLabel(): this.getValue())}</span>
             `;
 
         if (updateRenderedElement) {

@@ -1,226 +1,235 @@
-.multi-select {
+.multiselect {
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
     position: relative;
     width: 100%;
     user-select: none;
+}
 
-    .multi-select-header {
-        border: $multiselect-header-border;
-        padding: $multiselect-header-padding;
-        overflow: hidden;
-        gap: $multiselect-header-gap;
-        min-height: $multiselect-header-min-height;
+.multiselect-button {
+    background-color: $multiselect-button-background;
+    border: $multiselect-button-border;
+    padding: $multiselect-button-padding;
+    overflow: hidden;
+    gap: $multiselect-button-gap;
+    min-height: $multiselect-button-min-height;
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        background-image: $multiselect-option-radio-checkmark;
+        height: 12px;
+        width: 12px;
+    }
+
+    &.active {
+        border-color: $multiselect-button-active-border-color;
 
         &::after {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            background-image: $multiselect-option-radio-checkmark;
-            height: 12px;
-            width: 12px;
+            transform: translateY(-50%) rotate(180deg);
         }
+    }
+}
 
-        &.multi-select-header-active {
-            border-color: $multiselect-header-active-border-color;
+.multiselect-placeholder {
+    color: $multiselect-placeholder-color;
+    font-size: $multiselect-placeholder-font-size;
+    padding: $multiselect-placeholder-padding;
+}
+
+.multiselect-selected-option {
+    display: inline-flex;
+    align-items: center;
+    background-color: $multiselect-selected-option-background-color;
+    font-size: $multiselect-selected-option-font-size;
+    padding: $multiselect-selected-option-padding;
+    border-radius: $multiselect-selected-option-border-radius;
+}
+
+.multiselect-max-text {
+    font-size: $multiselect-max-text-font-size;
+    color: $multiselect-max-text-color;
+}
+
+.multiselect-option,
+.multiselect-select-all {
+    padding: $multiselect-option-padding;
+    height: $multiselect-option-height;
+
+    .multiselect-option-radio {
+        margin-right: $multiselect-option-radio-margin-right;
+        height: $multiselect-option-radio-height;
+        width: $multiselect-option-radio-width;
+        border: $multiselect-option-radio-border;
+        border-radius: $multiselect-option-radio-border-radius;
+    }
+
+    .multiselect-option-text {
+        box-sizing: border-box;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: inherit;
+        font-size: $multiselect-option-text-font-size;
+        line-height: $multiselect-option-text-line-height;
+    }
+
+    &.multiselect-selected {
+        background-color: $multiselect-option-selected-backgroundcolor;
+
+        .multiselect-option-radio {
+            border-color: $multiselect-option-selected-border-color;
+            background-color: $multiselect-option-selected-background-color;
 
             &::after {
-                transform: translateY(-50%) rotate(180deg);
-            }
+                content: $multiselect-option-selected-icon-content;
+                color: $multiselect-option-selected-icon-color;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: $multiselect-option-selected-icon-font-size;
+                width: 16px;
+                height: 16px;
+                background-image: $multiselect-option-selected-icon;
+                background-size: 9px;
+                background-repeat: no-repeat;
+                background-position: center;
+                margin-left: -1px;
+                margin-top: -1px;
 
-            & + .multi-select-options {
-                display: grid;
-                grid-template-columns: 1fr;
-                grid-template-rows: min-content 1fr min-content;
-                gap: 0 0;
-                grid-auto-flow: row;
-                grid-template-areas:
-                    "search"
-                    "options"
-                    "button";
-                  
-                .multi-select-search-wrapper {
-                    grid-area: search;
+                @if ($multiselect-option-selected-icon-font-family != null) {
+                    font-family: $multiselect-option-selected-icon-font-family;
                 }
-                
-                .multi-select-group {
-                    grid-area: options;
-                }
-                  
-                .multi-select-apply-button-wrapper {
-                    grid-area: button;
-                } 
             }
         }
 
-        .multi-select-header-placeholder {
-            color: $multiselect-placeholder-color;
-            font-size: $multiselect-placeholder-font-size;
-        }
-
-        .multi-select-header-option {
-            display: inline-flex;
-            align-items: center;
-            background-color: $multiselect-header-option-background-color;
-            font-size: $multiselect-header-option-font-size;
-            padding: $multiselect-header-option-padding;
-            border-radius: $multiselect-header-option-border-radius;
-        }
-
-        .multi-select-header-max {
-            font-size: $multiselect-header-max-font-size;
-            color: $multiselect-header-max-color;
+        .multiselect-option-text {
+            color: $multiselect-option-selected-color;
         }
     }
 
-    .multi-select-options {
-        display: none;
-        box-sizing: border-box;
-        flex-flow: wrap;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 999;
-        margin-top: $multiselect-options-margin-top;
-        padding: $multiselect-options-padding;
-        background-color: $multiselect-options-background-color;
-        border-radius: $multiselect-options-border-radius;
-        box-shadow: $multiselect-options-box-shadow;
-        max-height: $multiselect-options-max-height;
-        overflow: hidden;
+    &:hover, &:active {
+        background-color: $multiselect-option-hover-background-color;
+    }
+}
 
-        &.multi-select-hide-checkbox {
-            .multi-select-option-radio {
-                display: none;
-            }
-        }
+.multiselect-select-all {
+    border-bottom: $multiselect-select-all-border-bottom;
+    border-radius: 0;
+}
 
-        .multi-select-option, .multi-select-all {
-            padding: $multiselect-options-select-all-padding;
-            height: $multiselect-options-select-all-height;
+.multiselect-apply-button-wrapper,
+.multiselect-search-wrapper {
+    padding: $multiselect-search-margin;
+}
 
-            .multi-select-option-radio {
-                margin-right: $multiselect-option-radio-margin-right;
-                height: $multiselect-option-radio-height;
-                width: $multiselect-option-radio-width;
-                border: $multiselect-option-radio-border;
-                border-radius: $multiselect-option-radio-border-radius;
-            }
+.multiselect-apply-button-wrapper {
+    width: 100%;
+}
 
-            .multi-select-option-text {
-                box-sizing: border-box;
-                flex: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                color: inherit;
-                font-size: $multiselect-option-text-font-size;
-                line-height: $multiselect-option-text-line-height;
-            }
+.multiselect-search {
+    padding: $multiselect-search-padding;
+    border: $multiselect-search-border;
+    border-radius: $multiselect-search-border-radius;
+    width: 100%;
+    outline: none;
+    font-size: $multiselect-search-font-size;
 
-            &.multi-select-selected {
-                background-color: $multiselected-selected-backgroundcolor;
+    &::placeholder {
+        color: $multiselect-search-placeholder-color;
+    }
+}
 
-                .multi-select-option-radio {
-                    border-color: $multiselect-selected-border-color;
-                    background-color: $multiselect-selected-background-color;
+.multiselect-group {
+    padding: 7px 0;
+    width: 100%;
+    overflow-y: auto;
 
-                    &::after {
-                        content: $multiselect-selected-icon-content;
-                        color: $multiselect-selected-icon-color;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: $multiselect-selected-icon-content-font-size;
-                        width: 16px;
-                        height: 16px;
-                        background-image: $multiselect-selected-icon;
-                        background-size: 9px;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                        margin-left: -1px;
-                        margin-top: -1px;
-
-                        @if ($multiselect-selected-icon-font-family != null) {
-                            font-family: $multiselect-selected-icon-font-family;
-                        }
-                    }
-                }
-
-                .multi-select-option-text {
-                    color: $multiselect-selected-color;
-                }
-            }
-
-            &:hover, &:active {
-                background-color: $multiselect-option-background-color-hover;
-            }
-        }
-
-        .multi-select-all {
-            border-bottom: $multiselect-options-select-all-border-bottom;
-            border-radius: 0;
-        }
-
-        .multi-select-apply-button-wrapper,
-        .multi-select-search-wrapper {
-            padding: $multiselect-search-margin;
-        }
-
-        .multi-select-apply-button-wrapper {
-            width: 100%;
-        }
-
-        .multi-select-search {
-            padding: $multiselect-search-padding;
-            border: $multiselect-search-border;
-            border-radius: $multiselect-search-border-radius;
-            width: 100%;
-            outline: none;
-            font-size: $multiselect-search-font-size;
-
-            &::placeholder {
-                color: $multiselect-search-placeholder-color;
-            }
-        }
-
-        .multi-select-group {
-            padding: 7px 0;
-            width: 100%;
-            overflow-y: auto;
-
-            &::-webkit-scrollbar {
-                width: $multiselect-options-scrollbar-width;
-            }
-    
-            &::-webkit-scrollbar-track {
-                background: $multiselect-options-scrollbar-track-color;
-            }
-    
-            &::-webkit-scrollbar-thumb {
-                background: $multiselect-options-scrollbar-thumb-color;
-            }
-    
-            &::-webkit-scrollbar-thumb:hover {
-                background: $multiselect-options-scrollbar-thumb-hover-color;
-            }
-        }
+    &::-webkit-scrollbar {
+        width: $multiselect-dropdown-scrollbar-width;
     }
 
-    .multi-select-header, .multi-select-option, .multi-select-all {
-        display: flex;
-        flex-wrap: wrap;
-        box-sizing: border-box;
-        align-items: center;
-        border-radius: $multiselect-border-radius;
-        cursor: pointer;
-        width: 100%;
-        font-size: $multiselect-font-size;
-        color: $multiselect-color;
+    &::-webkit-scrollbar-track {
+        background: $multiselect-dropdown-scrollbar-track-color;
     }
+
+    &::-webkit-scrollbar-thumb {
+        background: $multiselect-dropdown-scrollbar-thumb-color;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: $multiselect-dropdown-scrollbar-thumb-hover-color;
+    }
+
+    &-options {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.multiselect-dropdown {
+    display: none;
+    box-sizing: border-box;
+    flex-flow: wrap;
+    position: absolute;
+    z-index: 999;
+    margin-top: $multiselect-dropdown-margin-top;
+    padding: $multiselect-dropdown-padding;
+    background-color: $multiselect-dropdown-background-color;
+    border-radius: $multiselect-dropdown-border-radius;
+    box-shadow: $multiselect-dropdown-box-shadow;
+    max-height: $multiselect-dropdown-max-height;
+    overflow: hidden;
+
+    &.multiselect-hide-checkbox {
+        .multiselect-option-radio {
+            display: none;
+        }
+    }
+    
+    &.open {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content 1fr min-content;
+        gap: 0 0;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "search"
+            "options"
+            "button";
+                    
+        .multiselect-search-wrapper {
+            grid-area: search;
+        }
+        
+        .multiselect-group {
+            grid-area: options;
+        }
+            
+        .multiselect-apply-button-wrapper {
+            grid-area: button;
+        } 
+    }
+}
+
+.multiselect-button,
+.multiselect-option,
+.multiselect-all {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    align-items: center;
+    border-radius: $multiselect-border-radius;
+    cursor: pointer;
+    width: 100%;
+    font-size: $multiselect-font-size;
+    color: $multiselect-color;
 }
