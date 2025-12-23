@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/erkenes/multiselect/compare/0.7.1...1.0.0) (2025-12-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* append the dropdown to body and optimize variable names
+
+### Features
+
+* append the dropdown to body and optimize variable names ([778793c](https://github.com/erkenes/multiselect/commit/778793c234e4e1c2e108f7bff3b857d3e003b2cd))
+
 ## [0.7.1](https://github.com/erkenes/multiselect/compare/0.7.0...0.7.1) (2025-12-22)
 
 
