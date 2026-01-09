@@ -138,7 +138,7 @@ export class MultiSelect {
 
             if (this.options.hasOwnProperty(dataProp)) {
                 if (boolOptions.includes(dataProp)) {
-                    this.options[dataProp] = new Boolean(value).valueOf();
+                    this.options[dataProp] = value == "true" || value == "1";
                 }
                 else if (intOptions.includes(dataProp)) {
                     const convValue = parseInt(value);
