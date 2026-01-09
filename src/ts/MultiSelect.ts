@@ -84,6 +84,7 @@ export class MultiSelect {
             height: '',
             dropdownWidth: '',
             dropdownHeight: '',
+            dropdownAutoWidth: false,
             data: new Map(),
             showCheckbox: true,
             showApplyButton: false,
@@ -120,6 +121,7 @@ export class MultiSelect {
             'search',
             'selectAll',
             'closeListOnItemSelect',
+            'dropdownAutoWidth',
             'showCheckbox',
             'showApplyButton',
         ];
@@ -370,7 +372,7 @@ export class MultiSelect {
         this.dropdown.style.top = `${anchorRect.bottom + window.scrollY}px`;
         this.dropdown.style.left = `${anchorRect.left + window.scrollX}px`;
         const width = anchorRect.width || this.dropdown.getBoundingClientRect().width;
-        if (width) {
+        if (width && this.options.dropdownAutoWidth) {
             this.dropdown.style.width = `${width}px`;
         }
     }

@@ -46,6 +46,7 @@ Include the scss file (or use the created dist file):
 | height                | number\|string | null             | (optional) force the height of the header                                                                                           |
 | dropdownWidth         | number\|string | null             | (optional) force the width of the dropdown                                                                                          |
 | dropdownHeight        | number\|string | null             | (optional) force the height of the dropdown                                                                                         |
+| dropdownAutoWidth     | boolean        | false            | (optional) sets the width to the size of the select element                                                                         |
 | data                  | Array          | []               | (optional) The options. The options will be read from the Select-Element                                                            |
 | translations          | JSON           | see Translations | (optional) Overwrite the labels                                                                                                     |
 

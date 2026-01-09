@@ -18,6 +18,7 @@ export interface MultiSelectOptions {
     height: number|string,
     dropdownWidth: number|string,
     dropdownHeight: number|string,
+    dropdownAutoWidth: boolean,
     data: Map<string, MultiSelectGroup>,
     onInitialize: (multiselect: MultiSelect) => void,
     onChange: (value: string, label: string, option: MultiSelectOptionI, multiselect: MultiSelect) => void,
