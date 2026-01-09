@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/erkenes/multiselect/compare/1.0.0...1.1.0) (2026-01-09)
+
+
+### Features
+
+* add auto width option for dropdown ([6836fc9](https://github.com/erkenes/multiselect/commit/6836fc9da26d418e42f7b5d1dffaebe900d2749e))
+
+
+### Bug Fixes
+
+* set boolean dataset options correctly ([d21421d](https://github.com/erkenes/multiselect/commit/d21421d7e1d176457738c86c643c61f9130d19ae))
+
 ## [1.0.0](https://github.com/erkenes/multiselect/compare/0.7.1...1.0.0) (2025-12-23)
 
 
