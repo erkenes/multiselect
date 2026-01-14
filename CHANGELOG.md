@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/erkenes/multiselect/compare/1.1.0...1.1.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* add missing !default to variable ([b1e15f8](https://github.com/erkenes/multiselect/commit/b1e15f818042c924e71fc9a62d631ff7dfee5d2d))
+
 ## [1.1.0](https://github.com/erkenes/multiselect/compare/1.0.0...1.1.0) (2026-01-09)
 
 
